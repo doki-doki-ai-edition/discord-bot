@@ -13,7 +13,7 @@ class Start(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="whitelist")
-    @commands.is_owner()
+    @commands.has_permissions(manage_messages=True)
     async def whitelist(self, interaction:discord.Interaction, channel:discord.TextChannel):
         """Add a channel to be whitelisted"""
         whitelist = await Info().getWhitelist
@@ -23,7 +23,7 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="remove_whitelist")
-    @commands.is_owner()
+    @commands.has_permissions(manage_messages=True)
     async def remove_whitelist(self, interaction:discord.Interaction, channel_id:str):
         """Remove a whitelisted channel"""
         whitelist = await Info().getWhitelist
@@ -58,8 +58,8 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="start")
-    @commands.is_owner()
-    async def start(self, interaction:discord.Interaction, chat_model: str,
+    @commands.has_permissions(manage_messages=True)
+    async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool,
                     monika_thread_id: discord.Thread,
                     sayori_thread_id: discord.Thread,
                     natsuki_thread_id: discord.Thread,
@@ -81,6 +81,7 @@ class Start(commands.Cog):
                                     interaction=interaction,
                                     chat_model=chat_model,
                                     channel_id=channel_id,
+                                    first_msg=first_msg,
                                     monika_thread_id=monika_thread_id.id,
                                     sayori_thread_id=sayori_thread_id.id,
                                     natsuki_thread_id=natsuki_thread_id.id,
@@ -91,7 +92,7 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="stop")
-    @commands.is_owner()
+    @commands.has_permissions(manage_messages=True)
     async def stop(self, interaction:discord.Interaction):
         """Stop any active chat"""
         self.bot.active_chat.remove(interaction.channel_id)

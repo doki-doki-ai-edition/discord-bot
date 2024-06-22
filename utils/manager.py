@@ -185,7 +185,7 @@ class Tools:
 
     async def filterWords(self, text):
         """Remove special characters"""
-        not_allowed = ["/", "`", "\\", "$", ";", "\"", "'", "{", "}", "#", "@", "%", "&", "*", "^", "|"]
+        not_allowed = ["/", "`", "\\", "$", ";", "\"", "'", "{", "}", "#", "@", "%", "&", "*", "^", "|", "["]
         for i in not_allowed:
             text = text.replace(i, '')
         return text

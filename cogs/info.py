@@ -1,6 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-from utils.data import Info, Data
+from utils.data import Info
 from utils.views import DokiOptions
 import discord
 

@@ -3,16 +3,17 @@ from utils.manager import Tools as managerTool
 import discord
 import asyncio
 import json
-
+import re
 
 class SetupChat:
-    def __init__(self, bot, interaction, chat_model, channel_id,
+    def __init__(self, bot, interaction, chat_model, channel_id, first_msg,
                   monika_thread_id, sayori_thread_id, natsuki_thread_id,
                   yuri_thread_id):
         self.bot = bot
         self.interaction: discord.Interaction = interaction
         self.chat_model = chat_model
         self.channel_id = channel_id
+        self.first_msg = first_msg
         self.monika_thread_id = monika_thread_id
         self.sayori_thread_id = sayori_thread_id
         self.natsuki_thread_id = natsuki_thread_id
@@ -39,7 +40,7 @@ class SetupChat:
 
 
 
-    async def chatText(self, userInput, chathistory, msg_id_for_reply=None):
+    async def chatText(self, userInput, chathistory, msg_id_for_reply=None, user_name=""):
         channel_obj = self.bot.get_channel(self.channel_id)
 
         reply, character = await AIManager(
@@ -48,6 +49,9 @@ class SetupChat:
             chat_model=self.chat_model,
             chathistory=chathistory
             ).AIResponse(userInput)
+
+
+        reply = re.sub("<@(.*?)>", f'{user_name}', reply)
 
         if character in self.chars:
             # Using custom made bots instead of a webhook
@@ -63,7 +67,7 @@ class SetupChat:
 
             # Wait for user to send msg
             try:
-                raw_msg = await self.bot.wait_for("message",
+                raw_msg: discord.Message = await self.bot.wait_for("message",
                 check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
                 timeout = 35)
 
@@ -77,10 +81,14 @@ class SetupChat:
                 print('Message was captured')
 
                 msg_id_for_reply = raw_msg.id
+                hasProfanity = await managerTool(self.bot).hasProfanity(raw_msg.author.display_name)
+                user_name = raw_msg.author.display_name if hasProfanity == False else "Anon"
+
             except asyncio.exceptions.TimeoutError:
                 print('\n\nNo one responded so timeout for chatText was reached')
                 userInput = 'continue'
                 msg_id_for_reply = None
+                user_name = ""
 
         else:
             if reply:
@@ -90,7 +98,7 @@ class SetupChat:
                 error = character
                 return await channel_obj.send(error)
 
-        return await self.chatText(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply)
+        return await self.chatText(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply, user_name=user_name)
 
 
 
