@@ -1,0 +1,19 @@
+{
+    "num_ctx": 2048,
+    "openai": {
+        "gpt-4o": {
+            "context_win": "128000"
+        },
+        "gpt-4-1106-preview": {
+            "context_win": "128000"
+        },
+        "gpt-3.5-turbo-1106": {
+            "context_win": "16385"
+        }
+    },
+    "groq": {
+        "llama3-70b-8192": {
+            "context_win": "8192"
+        }
+    }
+}

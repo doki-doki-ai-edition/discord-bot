@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Monika",
+        "emoji": "<:monthumb:1162541684329037875>",
+        "desc": "The president of the Literature Club",
+        "long_desc": "Hello there, I'm Monika! I'm the president of the Literature Club. It's a pleasure to meet you. I'm passionate about poetry, and I'm here to make sure our club is a welcoming and creative space for everyone.",
+        "thumbnail": "/assets/imgs/characters/monika/0display.png"
+    },
+    {
+        "name": "Sayori",
+        "emoji": "<:sayoriyes:1162544643465040053>",
+        "desc": "Cheerful, airheaded childhood friend of the protagonist in Doki Doki",
+        "long_desc": "I loves making friends, baking cookies, cuddling my stuffed animals, and finding joy in life's simple stuff even when I feel sad inside sometimes!",
+        "thumbnail": "/assets/imgs/characters/sayori/0display.png"
+    },
+    {
+        "name": "Natsuki",
+        "emoji": "<:natsukifacepalm:1162544636296974426>",
+        "desc": "A cute yet feisty girl who is confident in her interests in manga, baking, and poetry.",
+        "long_desc": "I love baking sugary treats and enjoy anything pink or adorable. I speak my mind and don't let people walk all over me. Just try and call me \"cute\" and see what happens!",
+        "thumbnail": "/assets/imgs/characters/natsuki/0display.png"
+    },
+    {
+        "name": "Yuri",
+        "emoji": "<:yurimaybe:1162544647369936906>",
+        "desc": "She is very intelligent and well-read, though her intense passion for horror and fantasy literature puts some people off",
+        "long_desc": "I suppose I come across as rather quiet and introverted to most. I tend to keep to myself and have always preferred the company of books over people.",
+        "thumbnail": "/assets/imgs/characters/yuri/0display.png"
+    }
+]
