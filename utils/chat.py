@@ -41,6 +41,10 @@ class SetupChat:
 
 
     async def chatText(self, userInput, chathistory, msg_id_for_reply=None, user_name=""):
+
+        if self.channel_id not in self.bot.active_chat:
+            return
+
         channel_obj = self.bot.get_channel(self.channel_id)
 
         reply, character = await AIManager(
