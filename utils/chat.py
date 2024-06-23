@@ -56,7 +56,8 @@ class SetupChat:
 
 
         reply = re.sub("<@(.*?)>", f'{user_name}', reply)
-
+        reply = reply.replace("@", "")
+        
         if character in self.chars:
             # Using custom made bots instead of a webhook
             for doki in self.chars:
