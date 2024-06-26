@@ -74,7 +74,7 @@ class SetupChat:
             try:
                 raw_msg: discord.Message = await self.bot.wait_for("message",
                 check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
-                timeout = 35)
+                timeout = 180)
 
                 header =   f"[NAME] <@{raw_msg.author.id}> [CONTENT] " 
                 user_content =  ''.join(char for char in raw_msg.content.strip())

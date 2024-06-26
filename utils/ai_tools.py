@@ -4,6 +4,7 @@ from utils.data import Configs
 import os
 import openai
 import requests
+import re
 
 THIS_PATH = os.path.dirname(os.path.realpath(__file__))
 PATH = os.path.dirname(THIS_PATH)
@@ -36,11 +37,13 @@ class TextModel:
         try:
             response.raise_for_status()
             data = response.json()
-            result = data["choices"][0]["message"]["content"] 
+            response = data["choices"][0]["message"]["content"] 
 
-            if "[END]" not in result:
-                return result + " [END]"
-            return  result
+            if "[END]" not in response:
+                return response + " [END]"
+            
+            response = re.sub(r'\*.*?\*', '', response)
+            return response
 
         except requests.exceptions.RequestException as e:
             return False, f"{e}"
@@ -62,6 +65,7 @@ class TextModel:
             # Remove everything after [END] but still append it to the end of the msg
             # This is so the AI still attempts to generate [END] for every msg.
             response = response.choices[0].message.content + " [END]"
+            response = re.sub(r'\*.*?\*', '', response)
             return response
         except openai.APIConnectionError as e:
             return False, "The server could not be reached"
@@ -86,7 +90,8 @@ class TextModel:
 
             # Remove everything after [END] but still append it to the end of the msg
             # This is so the AI still attempts to generate [END] for every msg.
-            response = response.choices[0].message.content + " [END]"
+            response = response.choices[0].message.content.strip() + " [END]"
+            response = re.sub(r'\*.*?\*', '', response)
             return response
         except GroqError as e:
             return False, f"An error occurred: {e}"

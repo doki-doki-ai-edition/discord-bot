@@ -37,7 +37,7 @@ class AIManager():
                 return None
 
         character = getContent('[CHAR]', '[CONTENT]')
-        reply = reply.split('[END]')[0]
+        reply = reply.split('[END]')[0].strip()
 
 
         if "[CONTENT]" in reply:
@@ -51,7 +51,7 @@ class AIManager():
 
 
 
-    async def checkForContextLimit(self, range=40, contains_system_prompt=False):
+    async def checkForContextLimit(self, range=400, contains_system_prompt=False):
         """Estimates the amount of tokens in the chathistory.
         If the max context window for an LLM is set to (for eg.) 1024 then if the tokens
         exceed that amount, the start of the chathistory will be deleted.
@@ -185,7 +185,7 @@ class Tools:
 
     async def filterWords(self, text):
         """Remove special characters"""
-        not_allowed = ["/", "`", "\\", "$", ";", "\"", "'", "{", "}", "#", "@", "%", "&", "*", "^", "|", "["]
+        not_allowed = ["/", "`", "\\", "$", ";", "{", "}", "#", "@", "%", "&", "^", "|", "["]
         for i in not_allowed:
             text = text.replace(i, '')
         return text
