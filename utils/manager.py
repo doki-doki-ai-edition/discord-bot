@@ -83,6 +83,8 @@ class AIManager():
         delete_pos = 0 if contains_system_prompt == False else 1
         current_tokens = self.count_tokens
 
+
+        print(f"max_tokens: {max_tokens}\ndel_pos: {delete_pos}\ncurrent_tokens: {current_tokens} ")
         # Continues to delete the chat from the top if
         # The current_tokens is still greater than max_tokens
         while (current_tokens) >= max_tokens - range:
