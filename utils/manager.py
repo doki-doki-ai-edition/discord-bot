@@ -51,7 +51,7 @@ class AIManager():
 
 
 
-    async def checkForContextLimit(self, range=400, contains_system_prompt=False):
+    async def checkForContextLimit(self, range=1300, contains_system_prompt=False):
         """Estimates the amount of tokens in the chathistory.
         If the max context window for an LLM is set to (for eg.) 1024 then if the tokens
         exceed that amount, the start of the chathistory will be deleted.
