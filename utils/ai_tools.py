@@ -1,5 +1,5 @@
 from openai import AsyncOpenAI
-from groq import Groq, GroqError
+from groq import AsyncGroq, GroqError
 from utils.data import Configs
 import os
 import openai
@@ -14,7 +14,7 @@ class TextModel:
     def __init__(self):
         self.config = Configs().config
         self.openai_client = AsyncOpenAI(api_key=self.config['GPT_TOKEN'])
-        self.groq_client = Groq(api_key=self.config["GROQ"],)
+        self.groq_client = AsyncGroq(api_key=self.config["GROQ"],)
 
 
 
@@ -80,7 +80,7 @@ class TextModel:
     async def getGroq(self, prompt):
         """Using Groq's API to quickly use large models"""
         try:
-            response = self.groq_client.chat.completions.create(
+            response = await self.groq_client.chat.completions.create(
                 model="llama3-70b-8192", # mixtral-8x7b-32768, llama2-70b-4096, gemma-7b-it, llama3-70b-8192
                 max_tokens=200,
                 temperature=0.6,
