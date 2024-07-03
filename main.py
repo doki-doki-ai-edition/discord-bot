@@ -15,7 +15,7 @@ INTENTS.message_content = True
 COMMAND_PREFIX = "dd!"
 
 #TODO:
-# - Mods can use the commands, not owner specific
+# - Mods can use some commands, not owner specific
 
 
 class Bot(commands.Bot):
