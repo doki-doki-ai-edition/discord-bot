@@ -4,6 +4,8 @@ If you're interested in setting it up for yourself, the process is down below.
 
 # Getting Started
 
+- in the directory of the project type this in a terminal `pip install -r requirements.txt`
+
 Setup a `config.json` file like this:
 
 ```js
