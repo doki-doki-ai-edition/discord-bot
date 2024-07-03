@@ -13,7 +13,7 @@ class Start(commands.Cog):
         self.bot = bot
 
     @app_commands.command(name="whitelist")
-    @commands.has_permissions(manage_messages=True)
+    @commands.is_owner()
     async def whitelist(self, interaction:discord.Interaction, channel:discord.TextChannel):
         """Add a channel to be whitelisted"""
         whitelist = await Info().getWhitelist
@@ -23,7 +23,7 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="remove_whitelist")
-    @commands.has_permissions(manage_messages=True)
+    @commands.is_owner()
     async def remove_whitelist(self, interaction:discord.Interaction, channel_id:str):
         """Remove a whitelisted channel"""
         whitelist = await Info().getWhitelist
@@ -58,7 +58,6 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="start")
-    @commands.has_permissions(manage_messages=True)
     async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool,
                     monika_thread_id: discord.Thread,
                     sayori_thread_id: discord.Thread,
@@ -92,7 +91,6 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="stop")
-    @commands.has_permissions(manage_messages=True)
     async def stop(self, interaction:discord.Interaction):
         """Stop any active chat"""
         self.bot.active_chat.remove(interaction.channel_id)

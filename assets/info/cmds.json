@@ -1,7 +1,7 @@
 {
     "desc": "Current basic help command",
     "cmds": {
-        "Info": "`downloads`, `dokis`, `chats`",
-        "Mods": "`start`, `stop`, `whitelist`, `remove_whitelist`"
+        "Info": "`start`, `stop`, `dokis`, `chats`", 
+        "Mods": "`whitelist`, `remove_whitelist`"
     }
 }
