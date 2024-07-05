@@ -65,7 +65,7 @@ class Start(commands.Cog):
     @app_commands.choices(chat_model=[
         app_commands.Choice(name="llama3-70b-8192", value="llama3-70b-8192"),
     ])
-    async def start(self, interaction:discord.Interaction, chat_model: app_commands.Choice[str], first_msg: bool):
+    async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool):
         """Begin chatting with the club members"""
 
         if interaction.channel_id in self.bot.active_chat:
