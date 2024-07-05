@@ -65,7 +65,7 @@ bot = Bot(command_prefix=COMMAND_PREFIX,
           intents=INTENTS,
           case_insensitive=True,
           allowed_mentions=discord.AllowedMentions(roles=False, everyone=False),
-          owner_ids=[1063386002955190312,285172553440296962]
+          owner_ids=[1063386002955190312] 
         )
 
 bot.sayori_thread_id = THREAD_ID # (Thread For storing messages)
