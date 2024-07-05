@@ -44,7 +44,7 @@ bot.PATH = PATH
 
 bot.active_chat = []
 
-bot.ddae_version = "0.1.0"
+bot.ddae_version = "0.2.0"
 
 
 @bot.command()

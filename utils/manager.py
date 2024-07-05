@@ -1,6 +1,6 @@
 from utils.data import Info, Configs
 from utils.ai_tools import TextModel
-import json
+import json, random
 
 
 class AIManager():
@@ -22,6 +22,19 @@ class AIManager():
             current_tokens += words_amnt
         return current_tokens
 
+
+
+    async def getDummyResponse(self):
+        """If the model doesn't return a proper response, return a dummy response"""
+        chars = ['Monika', 'Yuri', 'Natsuki', 'Sayori']
+        dummy_responses = [
+            "[CHAR] {char} [CONTENT] I'm not sure how to respond to that... [END]",
+            "[CHAR] {char} [CONTENT] I don't feel comfortable talking about this... [END]",
+            "[CHAR] {char} [CONTENT] We can't talk about this anymore... [END]"
+        ]
+        dummyMsg = random.choice(dummy_responses).replace('{char}', random.choice(chars))
+
+        return dummyMsg
 
 
     async def removeKeywords(self, reply):
@@ -127,6 +140,8 @@ class AIManager():
     async def AIResponse(self, userInput):
         """Gets ai generated text based off given prompt"""
         # Log user input
+        with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'r') as f:
+            self.chathistory = json.load(f)
         self.chathistory.append({"role": "user", "content": userInput })
 
         # Make sure the user's msg doesn't go over the context window
@@ -143,11 +158,16 @@ class AIManager():
 
         reply, character = await self.removeKeywords(response)
 
-        # Log AI input
-        self.chathistory.append({"role": "assistant", "content": response})
+        if reply == "ERROR":
+            response = await self.getDummyResponse()
+            reply, character = await self.removeKeywords(response)
 
-        with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
-            json.dump(self.chathistory, f, indent=2)
+        elif reply != "ERROR":
+            # Log AI input
+            self.chathistory.append({"role": "assistant", "content": response})
+
+            with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
+                json.dump(self.chathistory, f, indent=2)
         return reply, character
 
 
@@ -160,6 +180,16 @@ class Tools:
     def __init__(self, bot):
         self.bot = bot
         
+
+    async def resetChatHistory(self, channel_id):
+        """Reset the chat history"""
+        try:
+            with open(f"{self.bot.PATH}/data/{channel_id}.json", 'w') as f:
+                json.dump([], f, indent=2)
+            return True
+        except:
+            return False
+
 
     async def whitelistSetup(self, whitelist, value):
         """Add channel ID to a whitelist"""
