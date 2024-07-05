@@ -99,6 +99,19 @@ class Start(commands.Cog):
 
 
 
+    @app_commands.command(name="resetchat")
+    async def resetchat(self, interaction:discord.Interaction):
+        """Resets the chat history"""
+        if interaction.channel_id not in self.bot.active_chat:
+            return await interaction.response.send_message("> No active chat found.")
+        
+        success = await Tools(bot=self.bot).resetChatHistory(interaction.channel_id)
+
+        if not success:
+            return await interaction.response.send_message("> Chat history doesn't exist.")
+        await interaction.response.send_message("> Reset chat history.")
+
+
 
 async def setup(bot):
     await bot.add_cog(Start(bot))
