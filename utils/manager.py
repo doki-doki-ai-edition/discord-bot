@@ -162,11 +162,12 @@ class AIManager():
             response = await self.getDummyResponse()
             reply, character = await self.removeKeywords(response)
 
-        # Log AI input
-        self.chathistory.append({"role": "assistant", "content": response})
+        elif reply != "ERROR":
+            # Log AI input
+            self.chathistory.append({"role": "assistant", "content": response})
 
-        with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
-            json.dump(self.chathistory, f, indent=2)
+            with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
+                json.dump(self.chathistory, f, indent=2)
         return reply, character
 
 
