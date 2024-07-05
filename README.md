@@ -27,27 +27,25 @@ In your server create a log channel that only the DDAE bot and the other club me
 ## Monika
 
 - Make a bot and name it Monika
-- Use the code from https://github.com/doki-doki-ai-edition/Monika-bot
-- Set `bot.monika_thread_id` to a thread ID that only the Monika bot will have access to in your #doki-logs channel
-
-
+- Open `monika.py` in the `characters` folder
+- Set `THREAD_ID` to a thread ID that only the Monika bot will have access to in your #doki-logs channel
 
 ## Sayori
 
 - Make a bot and name it Monika
-- Use the code from https://github.com/doki-doki-ai-edition/Sayori-bot
-- Set `bot.sayori_thread_id` to a thread ID that only the Sayori bot will have access to in your #doki-logs channel
+- Open `sayori.py` in the `characters` folder
+- Set `THREAD_ID` to a thread ID that only the Sayori bot will have access to in your #doki-logs channel
 
 ## Natsuki
 
 - Make a bot and name it Monika
-- Use the code from https://github.com/doki-doki-ai-edition/Natsuki-bot
-- Set `bot.natsuki_thread_id` to a thread ID that only the Natsuki bot will have access to in your #doki-logs channel
+- Open `natsuki.py` in the `characters` folder
+- Set `THREAD_ID` to a thread ID that only the Natsuki bot will have access to in your #doki-logs channel
 
 ## Yuri
 
 - Make a bot and name it Monika
-- Use the code from https://github.com/doki-doki-ai-edition/Yuri-bot
-- Set `bot.yuri_thread_id` to a thread ID that only the Yuri bot will have access to in your #doki-logs channel
+- Open `yuri.py` in the `characters` folder
+- Set `THREAD_ID` to a thread ID that only the Yuri bot will have access to in your #doki-logs channel
 
 
