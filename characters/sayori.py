@@ -16,7 +16,7 @@ INTENTS.message_content = True
 COMMAND_PREFIX = "ss!"
 
 
-THREAD_ID = 1258251086288912445
+THREAD_ID = 1254613557958541403
 
 
 class Bot(commands.Bot):

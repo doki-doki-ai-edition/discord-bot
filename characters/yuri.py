@@ -16,7 +16,7 @@ INTENTS.message_content = True
 COMMAND_PREFIX = "yy!"
 
 
-THREAD_ID = 1258251009457786881
+THREAD_ID = 1254613714913591307
 
 
 class Bot(commands.Bot):
