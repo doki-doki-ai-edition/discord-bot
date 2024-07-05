@@ -35,7 +35,7 @@ class Bot(commands.Bot):
 bot = Bot(command_prefix=COMMAND_PREFIX,
           intents=INTENTS,
           allowed_mentions=discord.AllowedMentions(roles=False, everyone=False),
-          owner_ids=[1063386002955190312] # Replace or add your own UID from Discord
+          owner_ids=[1063386002955190312,285172553440296962] # Replace or add your own UID from Discord
         )
 bot.remove_command('help')
 bot.PATH = PATH

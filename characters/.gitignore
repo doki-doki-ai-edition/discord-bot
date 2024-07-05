@@ -1,0 +1,10 @@
+
+**/config.json
+
+**/.env
+
+**/.pyc
+
+**/data/
+
+**/__pycache__/

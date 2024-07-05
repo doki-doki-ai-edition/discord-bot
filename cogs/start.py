@@ -5,6 +5,10 @@ from utils import chat
 from utils.manager import Tools
 import discord
 
+from characters.monika import THREAD_ID as monika_thread_id
+from characters.sayori import THREAD_ID as sayori_thread_id
+from characters.natsuki import THREAD_ID as natsuki_thread_id
+from characters.yuri import THREAD_ID as yuri_thread_id
 
 
 class Start(commands.Cog):
@@ -58,11 +62,10 @@ class Start(commands.Cog):
 
 
     @app_commands.command(name="start")
-    async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool,
-                    monika_thread_id: discord.Thread,
-                    sayori_thread_id: discord.Thread,
-                    natsuki_thread_id: discord.Thread,
-                    yuri_thread_id: discord.Thread):
+    @app_commands.choices(chat_model=[
+        app_commands.Choice(name="llama3-70b-8192", value="llama3-70b-8192"),
+    ])
+    async def start(self, interaction:discord.Interaction, chat_model: app_commands.Choice[str], first_msg: bool):
         """Begin chatting with the club members"""
 
         if interaction.channel_id in self.bot.active_chat:
@@ -81,10 +84,10 @@ class Start(commands.Cog):
                                     chat_model=chat_model,
                                     channel_id=channel_id,
                                     first_msg=first_msg,
-                                    monika_thread_id=monika_thread_id.id,
-                                    sayori_thread_id=sayori_thread_id.id,
-                                    natsuki_thread_id=natsuki_thread_id.id,
-                                    yuri_thread_id=yuri_thread_id.id
+                                    monika_thread_id=monika_thread_id,
+                                    sayori_thread_id=sayori_thread_id,
+                                    natsuki_thread_id=natsuki_thread_id,
+                                    yuri_thread_id=yuri_thread_id
                                     ).setup()
 
 
