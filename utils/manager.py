@@ -159,8 +159,9 @@ class AIManager():
         reply, character = await self.removeKeywords(response)
 
         if reply == "ERROR":
-            response = await self.getDummyResponse()
-            reply, character = await self.removeKeywords(response)
+            dummyResponse = await self.getDummyResponse()
+            reply, character = await self.removeKeywords(dummyResponse)
+            print(f"> ERROR: Model didn't return a proper response, generated response: {response}\nDefaulting to dummy response: {dummyResponse}")
 
         elif reply != "ERROR":
             # Log AI input
