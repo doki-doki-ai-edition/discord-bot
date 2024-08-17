@@ -93,7 +93,6 @@ class SetupChat:
                 print('\n\nNo one responded so timeout for chatText was reached')
                 userInput = 'continue'
                 msg_id_for_reply = None
-                user_name = ""
 
         else:
             if reply:
