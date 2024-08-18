@@ -23,20 +23,6 @@ class AIManager():
         return current_tokens
 
 
-
-    async def getDummyResponse(self):
-        """If the model doesn't return a proper response, return a dummy response"""
-        chars = ['Monika', 'Yuri', 'Natsuki', 'Sayori']
-        dummy_responses = [
-            "[CHAR] {char} [CONTENT] I'm not sure how to respond to that... [END]",
-            "[CHAR] {char} [CONTENT] I don't feel comfortable talking about this... [END]",
-            "[CHAR] {char} [CONTENT] We can't talk about this anymore... [END]"
-        ]
-        dummyMsg = random.choice(dummy_responses).replace('{char}', random.choice(chars))
-
-        return dummyMsg
-
-
     async def removeKeywords(self, reply):
         """Get rid of keywords and return a clean string"""
 

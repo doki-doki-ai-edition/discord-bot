@@ -86,8 +86,6 @@ class SetupChat:
                 print('Message was captured')
 
                 msg_id_for_reply = raw_msg.id
-                hasProfanity = await managerTool(self.bot).hasProfanity(raw_msg.author.display_name)
-                user_name = raw_msg.author.display_name if hasProfanity == False else "Anon"
 
             except asyncio.exceptions.TimeoutError:
                 print('\n\nNo one responded so timeout for chatText was reached')
