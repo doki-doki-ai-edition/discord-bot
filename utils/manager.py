@@ -126,13 +126,14 @@ class AIManager():
     async def modelChoices(self, prompt):
         groq = Configs().getChatModelInfo["groq"]
         openai = Configs().getChatModelInfo["openai"]
+        ollama = Configs().getChatModelInfo["ollama"]
 
         if self.chat_model in groq:
-            return await TextModel().getGroq(prompt=prompt)
+            return await TextModel().getGroq(prompt=prompt, modelName=self.chat_model)
         elif self.chat_model in openai:
-            return await TextModel().getGPT(prompt=prompt)
-        else:
-            return await TextModel().getLLM(prompt=prompt)
+            return await TextModel().getGPT(prompt=prompt, modelName=self.chat_model)
+        elif self.chat_model in ollama:
+            return await TextModel().getLLM(prompt=prompt, modelName=self.chat_model)
 
 
 
@@ -159,16 +160,15 @@ class AIManager():
         reply, character = await self.removeKeywords(response)
 
         if reply == "ERROR":
-            dummyResponse = await self.getDummyResponse()
-            reply, character = await self.removeKeywords(dummyResponse)
-            print(f"> ERROR: Model didn't return a proper response, generated response: {response}\nDefaulting to dummy response: {dummyResponse}")
+            self.chathistory.pop(-1)
+            print(f"> ERROR: Model didn't return a proper response, generated response: {response}")
 
         elif reply != "ERROR":
             # Log AI input
             self.chathistory.append({"role": "assistant", "content": response})
 
-            with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
-                json.dump(self.chathistory, f, indent=2)
+        with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
+            json.dump(self.chathistory, f, indent=2)
         return reply, character
 
 

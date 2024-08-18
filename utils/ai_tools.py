@@ -1,6 +1,7 @@
 from openai import AsyncOpenAI
 from groq import AsyncGroq, GroqError
 from utils.data import Configs
+import ollama
 import os
 import openai
 import requests
@@ -18,44 +19,27 @@ class TextModel:
 
 
 
-    async def getLLM(self, prompt):
-        options = {
-            "options": {
-                "temperature": 0.6,
-                "stop": ['[INST', '[/INST', '[END]'],
-                "num_ctx": Configs().getChatModelInfo["num_ctx"]
-                }
-        }
-
-
-        response = requests.post(
-            "http://localhost:11434/v1/chat/completions",
-            json={"model": "llama3", "messages": prompt, "stream": False,
-                "options": options["options"]},
-        )
-
+    async def getLLM(self, prompt, modelName):
         try:
-            response.raise_for_status()
-            data = response.json()
-            response = data["choices"][0]["message"]["content"] 
+            options = ollama.Options(temperature=float(".6"), stop=['[INST', '[/INST', '[END]'],)
+            response = ollama.chat(model=modelName, messages=prompt, options=options)
+            result = response['message']['content'].strip()
 
-            if "[END]" not in response:
-                return response + " [END]"
-            
-            response = re.sub(r'\*.*?\*', '', response)
-            return response
-
+            if "[END]" not in result:
+                return result + " [END]"
+            result = re.sub(r'\*.*?\*', '', result)
+            return result
         except requests.exceptions.RequestException as e:
-            return False, f"{e}"
+                return False, f"{e}"
 
 
 
 
-    async def getGPT(self, prompt):
+    async def getGPT(self, prompt, modelName):
         """Using openai's GPT API"""
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4o", # gpt-4-1106-preview, gpt-4-turbo, gpt-4-turbo-2024-04-09, gpt-3.5-turbo-1106, gpt-3.5-turbo-16k
+                model=modelName, # gpt-4-1106-preview, gpt-4-turbo, gpt-4-turbo-2024-04-09, gpt-3.5-turbo-1106, gpt-3.5-turbo-16k
                 max_tokens=200,
                 temperature=0.6,
                 stop='[END]',
@@ -77,11 +61,11 @@ class TextModel:
 
 
 
-    async def getGroq(self, prompt):
+    async def getGroq(self, prompt, modelName):
         """Using Groq's API to quickly use large models"""
         try:
             response = await self.groq_client.chat.completions.create(
-                model="llama3-70b-8192", # mixtral-8x7b-32768, llama2-70b-4096, gemma-7b-it, llama3-70b-8192
+                model=modelName, # mixtral-8x7b-32768, llama2-70b-4096, gemma-7b-it, llama3-70b-8192
                 max_tokens=200,
                 temperature=0.6,
                 stop=['[INST', '[/INST', '[END]'],

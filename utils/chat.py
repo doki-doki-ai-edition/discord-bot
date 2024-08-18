@@ -53,7 +53,7 @@ class SetupChat:
             chat_model=self.chat_model,
             chathistory=chathistory
             ).AIResponse(userInput)
-
+        print(reply, character)
 
         reply = re.sub("<@(.*?)>", f'{user_name}', reply)
         reply = reply.replace("@", "")
@@ -93,14 +93,16 @@ class SetupChat:
                 print('\n\nNo one responded so timeout for chatText was reached')
                 userInput = 'continue'
                 msg_id_for_reply = None
+                #user_name = ""
 
         else:
-            if reply:
+            if reply and (reply!="ERROR"): 
                 await channel_obj.send(content=reply)
             else:
                 # A False value was returned
                 error = character
-                return await channel_obj.send(error)
+                if error:
+                    return await channel_obj.send(error)
 
         return await self.chatText(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply, user_name=user_name)
 

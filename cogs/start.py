@@ -63,7 +63,9 @@ class Start(commands.Cog):
 
     @app_commands.command(name="start")
     @app_commands.choices(chat_model=[
-        app_commands.Choice(name="llama3-70b-8192", value="llama3-70b-8192"),
+        app_commands.Choice(name="llama-3.1-70b-versatile", value="llama-3.1-70b-versatile"),
+        app_commands.Choice(name="gpt-4o-mini", value="gpt-4o-mini"),
+        app_commands.Choice(name="llama3.1", value="llama3.1")
     ])
     async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool):
         """Begin chatting with the club members"""
@@ -78,6 +80,8 @@ class Start(commands.Cog):
 
         error = await self.errorChecks(interaction=interaction, channel_id=channel_id, whitelist=whitelist, user_id=user_id)
         if error: return
+
+        print(f"Starting with model: {chat_model}")
 
         return await chat.SetupChat(bot=self.bot,
                                     interaction=interaction,
