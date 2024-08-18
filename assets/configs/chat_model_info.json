@@ -1,5 +1,4 @@
 {
-    "num_ctx": 2048,
     "openai": {
         "gpt-4o-mini": {
             "context_win": "30000"
@@ -10,7 +9,7 @@
     },
     "groq": {
         "llama-3.1-70b-versatile" : {
-            "context_win": "2400"
+            "context_win": "7000"
         }
     },
     "ollama": {
