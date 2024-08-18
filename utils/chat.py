@@ -86,12 +86,12 @@ class SetupChat:
                 print('Message was captured')
 
                 msg_id_for_reply = raw_msg.id
+                user_name = raw_msg.author.display_name
 
             except asyncio.exceptions.TimeoutError:
                 print('\n\nNo one responded so timeout for chatText was reached')
                 userInput = 'continue'
                 msg_id_for_reply = None
-                #user_name = ""
 
         else:
             if reply and (reply!="ERROR"): 

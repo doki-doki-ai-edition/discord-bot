@@ -16,10 +16,11 @@ class AIManager():
 
     @property
     def count_tokens(self):
-        current_tokens = 0
+        current_letters = 0
         for content in self.chathistory:
-            words_amnt = len(content['content'].split())
-            current_tokens += words_amnt
+            letter_amnt = len(content['content'])
+            current_letters += letter_amnt
+        current_tokens = current_letters // 4
         return current_tokens
 
 
@@ -50,7 +51,7 @@ class AIManager():
 
 
 
-    async def checkForContextLimit(self, range=1300, contains_system_prompt=False):
+    async def checkForContextLimit(self, system_prompt_offset=1300, contains_system_prompt=False):
         """Estimates the amount of tokens in the chathistory.
         If the max context window for an LLM is set to (for eg.) 1024 then if the tokens
         exceed that amount, the start of the chathistory will be deleted.
@@ -58,35 +59,31 @@ class AIManager():
         Both the user message and the assistant message.
 
         Args:
-            range -- the amount of words it will take before clearing up the chat. eg.
-                    if the max context window is 1024, with a range of 40 and the current
-                    context of the chathistory is >= 984 then it will delete the chat (first 2 msgs or more)
-                    once the current tokens reach 984 or higher.
+            system_prompt_offset -- estimated tokens in the system prompt, the history deleter
+                            will take this value into consideration when deleting up to 
+                            the max tokens. eg. if the max context window is 1024, and
+                            your system_prompt_offset is 40, once your current_tokens passes 984,
+                            it will begin to delete messages.
             
             contains_system_prompt -- Determines if the first index should be deleted or skipped
                                     (which would typically be the system prompt)
         """
-        parent_model = "openai"
-        checkForLLM = True
-        for model in Configs().getChatModelInfo["openai"]:
-            if self.chat_model == model:
-                parent_model = "openai"
-                checkForLLM = False
-                break
-        for model in Configs().getChatModelInfo["groq"]:
-            if self.chat_model == model:
-                parent_model = "groq"
-                checkForLLM = False
-                break
-        max_tokens = Configs().getChatModelInfo["num_ctx"] if checkForLLM else int(Configs().getChatModelInfo[parent_model][str(self.chat_model)]["context_win"])
-        delete_pos = 0 if contains_system_prompt == False else 1
-        current_tokens = self.count_tokens
 
+        delete_pos = 1 if contains_system_prompt else 0
+        current_tokens = self.count_tokens
+        model_set = None
+        if self.chat_model in Configs().getChatModelInfo["openai"]:
+            model_set = "openai"
+        if self.chat_model in Configs().getChatModelInfo["groq"]:
+            model_set = "groq"
+        if self.chat_model in Configs().getChatModelInfo["ollama"]:
+            model_set = "ollama"
+        max_tokens = int(Configs().getChatModelInfo[model_set][str(self.chat_model)]["context_win"])
 
         print(f"max_tokens: {max_tokens}\ndel_pos: {delete_pos}\ncurrent_tokens: {current_tokens} ")
         # Continues to delete the chat from the top if
         # The current_tokens is still greater than max_tokens
-        while (current_tokens) >= max_tokens - range:
+        while (current_tokens) >= max_tokens - system_prompt_offset:
             self.chathistory.pop(0 + delete_pos)
             self.chathistory.pop(1 + delete_pos)
             with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
