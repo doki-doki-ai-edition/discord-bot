@@ -1,6 +1,6 @@
 from discord.ext import commands
 from discord import app_commands
-from utils.data import Info
+from utils.data import Info, Configs
 from utils import chat
 from utils.manager import Tools
 import discord
@@ -15,6 +15,11 @@ class Start(commands.Cog):
     
     def __init__(self, bot):
         self.bot = bot
+        self.allModels = []
+        for api in ["openai", "groq", "ollama"]:
+            models = Configs().getChatModelInfo[api]
+            for m in models:
+                self.allModels.append(m)
 
     @app_commands.command(name="whitelist")
     @commands.is_owner()
@@ -58,15 +63,11 @@ class Start(commands.Cog):
 
         return False
 
-
-
+    async def model_autocomplete(self, interaction:discord.Interaction, current: str,):
+        return [app_commands.Choice(name=name, value=name) for name in self.allModels]
 
     @app_commands.command(name="start")
-    @app_commands.choices(chat_model=[
-        app_commands.Choice(name="llama-3.1-70b-versatile", value="llama-3.1-70b-versatile"),
-        app_commands.Choice(name="gpt-4o-mini", value="gpt-4o-mini"),
-        app_commands.Choice(name="llama3.1", value="llama3.1")
-    ])
+    @app_commands.autocomplete(chat_model=model_autocomplete)
     async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool):
         """Begin chatting with the club members"""
 

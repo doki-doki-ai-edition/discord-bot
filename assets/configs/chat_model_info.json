@@ -4,12 +4,6 @@
         "gpt-4o-mini": {
             "context_win": "30000"
         },
-        "gpt-4o": {
-            "context_win": "128000"
-        },
-        "gpt-4-1106-preview": {
-            "context_win": "128000"
-        },
         "gpt-3.5-turbo-1106": {
             "context_win": "16385"
         }
