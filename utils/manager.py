@@ -23,7 +23,7 @@ class AIManager():
         current_tokens = current_letters // 4
         return current_tokens
 
-
+ 
     async def removeKeywords(self, reply):
         """Get rid of keywords and return a clean string"""
 
@@ -148,7 +148,7 @@ class AIManager():
 
         elif reply != "ERROR":
             # Log AI input
-            self.chathistory.append({"role": "assistant", "content": response})
+            self.chathistory.append({"role": "assistant", "content": str(response)})
 
         with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
             json.dump(self.chathistory, f, indent=2)

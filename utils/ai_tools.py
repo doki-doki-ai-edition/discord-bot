@@ -30,7 +30,7 @@ class TextModel:
             result = re.sub(r'\*.*?\*', '', result)
             return result
         except requests.exceptions.RequestException as e:
-                return False, f"{e}"
+            return False, f"{e}"
 
 
 

@@ -101,6 +101,7 @@ class Start(commands.Cog):
     @app_commands.command(name="stop")
     async def stop(self, interaction:discord.Interaction):
         """Stop any active chat"""
+        print(self.bot.active_chat)
         self.bot.active_chat.remove(interaction.channel_id)
         await interaction.response.send_message("> Stopped any currently active chat.")
 

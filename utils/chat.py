@@ -73,11 +73,12 @@ class SetupChat:
             # Wait for user to send msg
             try:
                 raw_msg: discord.Message = await self.bot.wait_for("message",
-                check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
-                timeout = 180)
+                    check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
+                    timeout = 180
+                )
 
-                header =   f"[NAME] <@{raw_msg.author.id}> [CONTENT] " 
-                user_content =  ''.join(char for char in raw_msg.content.strip())
+                header = f"[NAME] <@{raw_msg.author.id}> [CONTENT] " 
+                user_content = ''.join(char for char in raw_msg.content.strip())
                 user_content = await managerTool(self.bot).filterWords(user_content)
 
 
