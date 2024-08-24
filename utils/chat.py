@@ -1,9 +1,6 @@
 from utils.manager import AIManager
 from utils.manager import Tools as managerTool
-import discord
-import asyncio
-import json
-import re
+import discord, asyncio, json, re, random
 
 class SetupChat:
     def __init__(self, bot, interaction, chat_model, channel_id, first_msg,
@@ -76,14 +73,13 @@ class SetupChat:
                     check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
                     timeout = 180
                 )
-
-                header = f"[NAME] <@{raw_msg.author.id}> [CONTENT] " 
+                
                 user_content = ''.join(char for char in raw_msg.content.strip())
                 user_content = await managerTool(self.bot).filterWords(user_content)
 
-
-                userInput = header + user_content
+                userInput = f"[NAME] <@{raw_msg.author.id}> [CONTENT] {user_content}" 
                 userInput = userInput[:256] # Number of characters allowed (not words)
+                
                 print('Message was captured')
 
                 msg_id_for_reply = raw_msg.id
@@ -102,7 +98,10 @@ class SetupChat:
                 error = character
                 if error:
                     return await channel_obj.send(error)
-
+        progressChance = random.randrange(0,3)
+        if progressChance==0:
+            print("Progressing convo...")
+            userInput += r" {progress the conversation, or change subjects if necessary}"
         return await self.chatText(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply, user_name=user_name)
 
 
