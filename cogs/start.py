@@ -15,6 +15,7 @@ class Start(commands.Cog):
     
     def __init__(self, bot):
         self.bot = bot
+        self.activeChatInstance = None
         self.allModels = []
         for api in ["openai", "groq", "ollama"]:
             models = Configs().getChatModelInfo[api]
@@ -58,7 +59,7 @@ class Start(commands.Cog):
         if channel_id not in whitelist["channels"]:
             return await self.sendErrorMessage(interaction, "This channel isn't **whitelisted.**")
 
-        if user_id in self.bot.active_chat:
+        if user_id in self.bot.active_chat_channels:
             return await self.sendErrorMessage(interaction, "You can't start a thread while one is currently active. Type `/stop` and try again.")
 
         return False
@@ -71,7 +72,7 @@ class Start(commands.Cog):
     async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool):
         """Begin chatting with the club members"""
 
-        if interaction.channel_id in self.bot.active_chat:
+        if interaction.channel_id in self.bot.active_chat_channels:
             return await interaction.response.send_message(content="**This chat is already active**")
 
         channel_id = interaction.channel.id
@@ -83,17 +84,18 @@ class Start(commands.Cog):
         if error: return
 
         print(f"Starting with model: {chat_model}")
-
-        return await chat.SetupChat(bot=self.bot,
-                                    interaction=interaction,
-                                    chat_model=chat_model,
-                                    channel_id=channel_id,
-                                    first_msg=first_msg,
-                                    monika_thread_id=monika_thread_id,
-                                    sayori_thread_id=sayori_thread_id,
-                                    natsuki_thread_id=natsuki_thread_id,
-                                    yuri_thread_id=yuri_thread_id
-                                    ).setup()
+        self.activeChatInstance = chat.ChatManager(
+            bot=self.bot,
+            interaction=interaction,
+            chat_model=chat_model,
+            channel_id=channel_id,
+            first_msg=first_msg,
+            monika_thread_id=monika_thread_id,
+            sayori_thread_id=sayori_thread_id,
+            natsuki_thread_id=natsuki_thread_id,
+            yuri_thread_id=yuri_thread_id
+        )
+        return await self.activeChatInstance.setup()
 
 
 
@@ -101,8 +103,9 @@ class Start(commands.Cog):
     @app_commands.command(name="stop")
     async def stop(self, interaction:discord.Interaction):
         """Stop any active chat"""
-        print(self.bot.active_chat)
-        self.bot.active_chat.remove(interaction.channel_id)
+        self.bot.active_chat_channels.remove(interaction.channel_id)
+        self.activeChatInstance.chat_still_active = False
+        self.activeChatInstance = None
         await interaction.response.send_message("> Stopped any currently active chat.")
 
 
@@ -111,7 +114,7 @@ class Start(commands.Cog):
     @app_commands.command(name="resetchat")
     async def resetchat(self, interaction:discord.Interaction):
         """Resets the chat history"""
-        if interaction.channel_id not in self.bot.active_chat:
+        if interaction.channel_id not in self.bot.active_chat_channels:
             return await interaction.response.send_message("> No active chat found.")
         
         success = await Tools(bot=self.bot).resetChatHistory(interaction.channel_id)

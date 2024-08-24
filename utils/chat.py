@@ -2,7 +2,7 @@ from utils.manager import AIManager
 from utils.manager import Tools as managerTool
 import discord, asyncio, json, re, random
 
-class SetupChat:
+class ChatManager:
     def __init__(self, bot, interaction, chat_model, channel_id, first_msg,
                   monika_thread_id, sayori_thread_id, natsuki_thread_id,
                   yuri_thread_id):
@@ -18,6 +18,7 @@ class SetupChat:
         self.tools = Tools(self.bot)
         self.chars = {"Monika": self.monika_thread_id, "Sayori": self.sayori_thread_id,
                      "Natsuki": self.natsuki_thread_id, "Yuri": self.yuri_thread_id}
+        self.chat_still_active = False
         with open(f'{self.bot.PATH}/config.json') as f:
             self.config = json.load(f)
         with open(f"{self.bot.PATH}/assets/prompts/prompt_template.json") as f:
@@ -31,7 +32,8 @@ class SetupChat:
 
         userInput = "{RST}" if self.first_msg else "continue"
 
-        self.bot.active_chat.append(self.channel_id)
+        self.bot.active_chat_channels.append(self.channel_id)
+        self.chat_still_active = True
         return await self.chatText(userInput=userInput, chathistory=chathistory)
 
 
@@ -39,7 +41,7 @@ class SetupChat:
 
     async def chatText(self, userInput, chathistory, msg_id_for_reply=None, user_name=""):
 
-        if self.channel_id not in self.bot.active_chat:
+        if self.channel_id not in self.bot.active_chat_channels:
             return
 
         channel_obj = self.bot.get_channel(self.channel_id)
@@ -70,7 +72,7 @@ class SetupChat:
             # Wait for user to send msg
             try:
                 raw_msg: discord.Message = await self.bot.wait_for("message",
-                    check=lambda m: m.channel.id == channel_obj.id and not m.author.bot, 
+                    check=lambda m: m.channel.id == channel_obj.id and not m.author.bot and self.chat_still_active, 
                     timeout = 180
                 )
                 

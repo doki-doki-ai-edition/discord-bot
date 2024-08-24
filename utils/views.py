@@ -35,7 +35,6 @@ class SelectDoki(discord.ui.Select):
                          options=options)
 
     async def callback(self, interaction: discord.Interaction):
-
         # Send embed containing info of the characters
         for i in self.dokis:
             if self.values[0] == i['name'] and self.values[0] != "All":

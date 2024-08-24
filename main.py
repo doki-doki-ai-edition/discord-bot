@@ -42,7 +42,7 @@ bot.PATH = PATH
 
 
 
-bot.active_chat = []
+bot.active_chat_channels = []
 
 bot.ddae_version = "0.3.0"
 
