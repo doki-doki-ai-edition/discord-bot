@@ -5,22 +5,20 @@ THIS_PATH = os.path.dirname(os.path.realpath(__file__))
 PATH = os.path.dirname(THIS_PATH)
 
 class Data:
-
     def __init__(self):
         pass
 
 
 
 
-
 class Configs:
-
     @property
     def config(self):
         with open(f'{PATH}/config.json', 'r') as f:
             config = json.load(f)
         return config
-    
+
+
     @property
     def getChatModelInfo(self):
         with open(f'{PATH}/assets/configs/chat_model_info.json', 'r') as f:
@@ -28,12 +26,29 @@ class Configs:
         return chat_model_info
 
 
+    def setChatModelInfo(self, chat_model_info):
+        with open(f'{PATH}/assets/configs/chat_model_info.json', 'w') as f:
+            json.dump(chat_model_info, f, indent=4)
+
+
+    def setChatModelTemperature(self, model_family, chat_model, temperature):
+        chat_model_info = self.getChatModelInfo
+        chat_model_info[model_family][chat_model]["temperature"] = temperature
+        self.setChatModelInfo(chat_model_info=chat_model_info)
+
+
+    def getModelFamilyFromModel(self, chat_model):
+        for model_family in ["openai", "groq", "ollama"]:
+            models = Configs().getChatModelInfo[model_family]
+            if chat_model in models:
+                return model_family
+        return False
+
 
 
 
 
 class Info:
-
     @property
     def getDokis(self):
         with open(PATH + "/assets/info/dokis.json", "r") as f:
@@ -81,7 +96,6 @@ class Info:
 
 
 class Misc:
-    
     @property
     async def getDummyText(self):
         with open(f'{PATH}/assets/misc/dummy_msgs.json') as f:

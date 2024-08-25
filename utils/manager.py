@@ -160,7 +160,6 @@ class AIManager():
 
 
 class Tools:
-
     def __init__(self, bot):
         self.bot = bot
         
@@ -170,6 +169,20 @@ class Tools:
         try:
             with open(f"{self.bot.PATH}/data/{channel_id}.json", 'w') as f:
                 json.dump([], f, indent=2)
+            return True
+        except:
+            return False
+
+
+    async def setModelTemperature(self, chat_model, temperature):
+        """Sets a model's temperature"""
+        try:
+            model_family = Configs().getModelFamilyFromModel(chat_model)
+            Configs().setChatModelTemperature(
+                model_family=model_family, 
+                chat_model=chat_model, 
+                temperature=temperature
+            )
             return True
         except:
             return False

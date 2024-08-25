@@ -17,10 +17,39 @@ class Start(commands.Cog):
         self.bot = bot
         self.activeChatInstance = None
         self.allModels = []
-        for api in ["openai", "groq", "ollama"]:
-            models = Configs().getChatModelInfo[api]
+        for modelFamily in ["openai", "groq", "ollama"]:
+            models = Configs().getChatModelInfo[modelFamily]
             for m in models:
                 self.allModels.append(m)
+
+
+
+
+    async def sendErrorMessage(self, interaction, message, first_message=True):
+        if first_message:
+            await interaction.response.send_message(content=message)
+        else:
+            await interaction.followup.send(content=message)
+        return True
+
+
+    async def errorChecks(self, interaction, channel_id, whitelist, user_id):
+        if not isinstance(interaction.channel, discord.TextChannel):
+            return await self.sendErrorMessage(interaction, "Start command can only be used in a Text Channel!")
+
+        if channel_id not in whitelist["channels"]:
+            return await self.sendErrorMessage(interaction, "This channel isn't **whitelisted.**")
+
+        if user_id in self.bot.active_chat_channels:
+            return await self.sendErrorMessage(interaction, "You can't start a thread while one is currently active. Type `/stop` and try again.")
+        return False
+
+
+    async def model_autocomplete(self, interaction:discord.Interaction, current: str,):
+        return [app_commands.Choice(name=name, value=name) for name in self.allModels]
+
+
+
 
     @app_commands.command(name="whitelist")
     @commands.is_owner()
@@ -43,29 +72,6 @@ class Start(commands.Cog):
         return await interaction.response.send_message(content="Channel not found.")
 
 
-
-    async def sendErrorMessage(self, interaction, message, first_message=True):
-        if first_message:
-            await interaction.response.send_message(content=message)
-        else:
-            await interaction.followup.send(content=message)
-        return True
-
-
-    async def errorChecks(self, interaction, channel_id, whitelist, user_id):
-        if not isinstance(interaction.channel, discord.TextChannel):
-            return await self.sendErrorMessage(interaction, "Start command can only be used in a Text Channel!")
-
-        if channel_id not in whitelist["channels"]:
-            return await self.sendErrorMessage(interaction, "This channel isn't **whitelisted.**")
-
-        if user_id in self.bot.active_chat_channels:
-            return await self.sendErrorMessage(interaction, "You can't start a thread while one is currently active. Type `/stop` and try again.")
-
-        return False
-
-    async def model_autocomplete(self, interaction:discord.Interaction, current: str,):
-        return [app_commands.Choice(name=name, value=name) for name in self.allModels]
 
     @app_commands.command(name="start")
     @app_commands.autocomplete(chat_model=model_autocomplete)
@@ -108,6 +114,17 @@ class Start(commands.Cog):
         self.activeChatInstance = None
         await interaction.response.send_message("> Stopped any currently active chat.")
 
+
+
+    @app_commands.command(name="settemp")
+    @app_commands.autocomplete(chat_model=model_autocomplete)
+    async def settemp(self, interaction:discord.Interaction, chat_model: str, temp: float):
+        """Set the temperature for a specific model"""        
+        success = await Tools(bot=self.bot).setModelTemperature(chat_model, temp)
+
+        if not success:
+            return await interaction.response.send_message("> Error setting model temperature.")
+        await interaction.response.send_message(f"> Set the temperature for model `{chat_model}` to `{temp}`.")
 
 
 

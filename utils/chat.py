@@ -1,5 +1,5 @@
 from utils.manager import AIManager
-from utils.manager import Tools as managerTool
+from utils.manager import Tools
 import discord, asyncio, json, re, random
 
 class ChatManager:
@@ -34,13 +34,11 @@ class ChatManager:
 
         self.bot.active_chat_channels.append(self.channel_id)
         self.chat_still_active = True
-        return await self.chatText(userInput=userInput, chathistory=chathistory)
+        return await self.chat(userInput=userInput, chathistory=chathistory)
 
 
 
-
-    async def chatText(self, userInput, chathistory, msg_id_for_reply=None, user_name=""):
-
+    async def chat(self, userInput, chathistory, msg_id_for_reply=None, user_name=""):
         if self.channel_id not in self.bot.active_chat_channels:
             return
 
@@ -77,7 +75,7 @@ class ChatManager:
                 )
                 
                 user_content = ''.join(char for char in raw_msg.content.strip())
-                user_content = await managerTool(self.bot).filterWords(user_content)
+                user_content = await Tools(self.bot).filterWords(user_content)
 
                 userInput = f"[NAME] <@{raw_msg.author.id}> [CONTENT] {user_content}" 
                 userInput = userInput[:256] # Number of characters allowed (not words)
@@ -104,7 +102,7 @@ class ChatManager:
         if progressChance==0:
             print("Progressing convo...")
             userInput += r" {progress the conversation, or change subjects if necessary}"
-        return await self.chatText(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply, user_name=user_name)
+        return await self.chat(userInput=userInput, chathistory=chathistory, msg_id_for_reply=msg_id_for_reply, user_name=user_name)
 
 
 
