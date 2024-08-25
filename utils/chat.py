@@ -3,21 +3,14 @@ from utils.manager import Tools as tools
 import discord, asyncio, json, re, random
 
 class ChatManager:
-    def __init__(self, bot, interaction, chat_model, channel_id, first_msg,
-                  monika_thread_id, sayori_thread_id, natsuki_thread_id,
-                  yuri_thread_id):
+    def __init__(self, bot, interaction, chat_model, channel_id, first_msg, characters):
         self.bot = bot
         self.interaction: discord.Interaction = interaction
         self.chat_model = chat_model
         self.channel_id = channel_id
         self.first_msg = first_msg
-        self.monika_thread_id = monika_thread_id
-        self.sayori_thread_id = sayori_thread_id
-        self.natsuki_thread_id = natsuki_thread_id
-        self.yuri_thread_id = yuri_thread_id
         self.tools = Tools(self.bot)
-        self.chars = {"Monika": self.monika_thread_id, "Sayori": self.sayori_thread_id,
-                     "Natsuki": self.natsuki_thread_id, "Yuri": self.yuri_thread_id}
+        self.chars = characters
         self.chat_still_active = False
         with open(f'{self.bot.PATH}/config.json') as f:
             self.config = json.load(f)

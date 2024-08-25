@@ -3,16 +3,10 @@ from discord import app_commands
 from utils.data import Info, Configs
 from utils import chat
 from utils.manager import Tools
-import discord
-
-from characters.monika import THREAD_ID as monika_thread_id
-from characters.sayori import THREAD_ID as sayori_thread_id
-from characters.natsuki import THREAD_ID as natsuki_thread_id
-from characters.yuri import THREAD_ID as yuri_thread_id
+import discord, os
 
 
 class Start(commands.Cog):
-    
     def __init__(self, bot):
         self.bot = bot
         self.activeChatInstance = None
@@ -22,6 +16,24 @@ class Start(commands.Cog):
             for m in models:
                 self.allModels.append(m)
 
+        self.allCharacters = {}
+        # Loop through all files in characters folder ending in .py
+        charDir = f"{self.bot.PATH}/characters/"
+
+        for file in os.listdir(charDir):
+            if file.endswith(".py"):
+                # Create the module name by stripping the .py extension
+                char = file[:-3].capitalize()
+                file_path = os.path.join(charDir, file)
+                
+                # Execute the file and extract the THREAD_ID
+                module_globals = {"__file__": file_path}
+                with open(file_path) as f:
+                    exec(f.read(), module_globals)
+                
+                # Add THREAD_ID to the dictionary if it exists
+                if 'THREAD_ID' in module_globals:
+                    self.allCharacters[char] = module_globals['THREAD_ID']
 
 
 
@@ -96,13 +108,9 @@ class Start(commands.Cog):
             chat_model=chat_model,
             channel_id=channel_id,
             first_msg=first_msg,
-            monika_thread_id=monika_thread_id,
-            sayori_thread_id=sayori_thread_id,
-            natsuki_thread_id=natsuki_thread_id,
-            yuri_thread_id=yuri_thread_id
+            characters=self.allCharacters
         )
         return await self.activeChatInstance.setup()
-
 
 
 

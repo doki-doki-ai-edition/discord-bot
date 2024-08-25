@@ -23,7 +23,7 @@ class AIManager():
         current_tokens = current_letters // 4
         return current_tokens
 
- 
+
     async def removeKeywords(self, reply):
         """Get rid of keywords and return a clean string"""
 

@@ -12,7 +12,7 @@
     "groq": {
         "llama-3.1-70b-versatile": {
             "context_win": "5600",
-            "temperature": 0.9
+            "temperature": 0.8
         }
     },
     "ollama": {
