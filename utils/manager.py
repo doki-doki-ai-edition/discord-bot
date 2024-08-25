@@ -15,7 +15,7 @@ class AIManager():
 
 
     @property
-    def count_tokens(self):
+    def token_count(self):
         current_letters = 0
         for content in self.chathistory:
             letter_amnt = len(content['content'])
@@ -70,7 +70,7 @@ class AIManager():
         """
 
         delete_pos = 1 if contains_system_prompt else 0
-        current_tokens = self.count_tokens
+        current_tokens = self.token_count
         model_set = None
         if self.chat_model in Configs().getChatModelInfo["openai"]:
             model_set = "openai"
@@ -89,7 +89,7 @@ class AIManager():
             with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'w') as f:
                 json.dump(self.chathistory, f, indent=2)
             print("***POPPED 2 MESSAGES***")
-            current_tokens = self.count_tokens
+            current_tokens = self.token_count
 
 
 
@@ -126,7 +126,7 @@ class AIManager():
         # Log user input
         with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'r') as f:
             self.chathistory = json.load(f)
-        self.chathistory.append({"role": "user", "content": userInput })
+        self.chathistory.append({"role": "user", "content": userInput})
 
         # Make sure the user's msg doesn't go over the context window
         await self.checkForContextLimit()

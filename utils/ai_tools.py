@@ -17,11 +17,15 @@ class TextModel:
         self.openai_client = AsyncOpenAI(api_key=self.config['GPT_TOKEN'])
         self.groq_client = AsyncGroq(api_key=self.config["GROQ"],)
 
+    def getModelTemp(self, modelFamily, modelName):
+        return Configs().getChatModelInfo[modelFamily][modelName]["temperature"]
+
 
 
     async def getLLM(self, prompt, modelName):
         try:
-            options = ollama.Options(temperature=float(".6"), stop=['[INST', '[/INST', '[END]'],)
+            temp = self.getModelTemp(modelFamily="ollama", modelName=modelName)
+            options = ollama.Options(temperature=float(str(temp)), stop=['[INST', '[/INST', '[END]'],)
             response = ollama.chat(model=modelName, messages=prompt, options=options)
             result = response['message']['content'].strip()
 
@@ -38,10 +42,11 @@ class TextModel:
     async def getGPT(self, prompt, modelName):
         """Using openai's GPT API"""
         try:
+            temp = self.getModelTemp(modelFamily="openai", modelName=modelName)
             response = await self.openai_client.chat.completions.create(
                 model=modelName, # gpt-4-1106-preview, gpt-4-turbo, gpt-4-turbo-2024-04-09, gpt-3.5-turbo-1106, gpt-3.5-turbo-16k
                 max_tokens=200,
-                temperature=0.6,
+                temperature=temp,
                 stop='[END]',
                 messages=prompt
             )
@@ -64,10 +69,11 @@ class TextModel:
     async def getGroq(self, prompt, modelName):
         """Using Groq's API to quickly use large models"""
         try:
+            temp = self.getModelTemp(modelFamily="groq", modelName=modelName)
             response = await self.groq_client.chat.completions.create(
                 model=modelName, # mixtral-8x7b-32768, llama2-70b-4096, gemma-7b-it, llama3-70b-8192
                 max_tokens=200,
-                temperature=0.6,
+                temperature=temp,
                 stop=['[INST', '[/INST', '[END]'],
                 messages=prompt
             )

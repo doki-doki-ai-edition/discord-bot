@@ -47,7 +47,6 @@ class Configs:
 
 
 
-
 class Info:
     @property
     def getDokis(self):
@@ -89,9 +88,6 @@ class Info:
                 whitelist = json.load(f)
         return whitelist
     
-
-
-
 
 
 

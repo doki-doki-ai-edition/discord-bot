@@ -1,5 +1,5 @@
 from utils.manager import AIManager
-from utils.manager import Tools
+from utils.manager import Tools as tools
 import discord, asyncio, json, re, random
 
 class ChatManager:
@@ -75,7 +75,7 @@ class ChatManager:
                 )
                 
                 user_content = ''.join(char for char in raw_msg.content.strip())
-                user_content = await Tools(self.bot).filterWords(user_content)
+                user_content = await tools(self.bot).filterWords(user_content)
 
                 userInput = f"[NAME] <@{raw_msg.author.id}> [CONTENT] {user_content}" 
                 userInput = userInput[:256] # Number of characters allowed (not words)
