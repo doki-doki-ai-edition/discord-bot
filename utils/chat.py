@@ -1,9 +1,10 @@
 from utils.manager import AIManager
 from utils.manager import Tools as tools
+from utils.data import Info
 import discord, asyncio, json, re, random
 
 class ChatManager:
-    def __init__(self, bot, interaction, chat_model, channel_id, first_msg, characters):
+    def __init__(self, bot, interaction, chat_model, channel_id, first_msg, characters, chosen_prompt):
         self.bot = bot
         self.interaction: discord.Interaction = interaction
         self.chat_model = chat_model
@@ -14,15 +15,13 @@ class ChatManager:
         self.chat_still_active = False
         with open(f'{self.bot.PATH}/config.json') as f:
             self.config = json.load(f)
-        with open(f"{self.bot.PATH}/assets/prompts/prompt_template.json") as f:
-            self.prompt_template = json.load(f)
+        self.system_prompt = chosen_prompt
 
 
 
     async def setup(self):
         default_chathistory = self.bot.PATH + f"/data/{self.channel_id}.json"
         chathistory = await self.tools.checkFile(default_chathistory)
-
         userInput = "{RST}" if self.first_msg else "continue"
 
         self.bot.active_chat_channels.append(self.channel_id)
@@ -42,7 +41,7 @@ class ChatManager:
             channel_id=self.channel_id,
             chat_model=self.chat_model,
             chathistory=chathistory
-            ).AIResponse(userInput)
+            ).AIResponse(userInput, self.system_prompt)
         print(reply, character)
 
         reply = re.sub("<@(.*?)>", f'{user_name}', reply)
@@ -66,7 +65,7 @@ class ChatManager:
                     check=lambda m: m.channel.id == channel_obj.id and not m.author.bot and self.chat_still_active, 
                     timeout = 180
                 )
-                
+
                 user_content = ''.join(char for char in raw_msg.content.strip())
                 user_content = await tools(self.bot).filterWords(user_content)
 

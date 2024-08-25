@@ -121,7 +121,7 @@ class AIManager():
 
 
 
-    async def AIResponse(self, userInput):
+    async def AIResponse(self, userInput, systemPrompt):
         """Gets ai generated text based off given prompt"""
         # Log user input
         with open(f"{self.bot.PATH}/data/{self.channel_id}.json", 'r') as f:
@@ -130,8 +130,8 @@ class AIManager():
 
         # Make sure the user's msg doesn't go over the context window
         await self.checkForContextLimit()
-        examples = Info().getExamplePrompts[f"gpt4"]
-        contextAndUserMsg = examples + self.chathistory
+        systemPrompt = Info().getSystemPrompt(chosen_prompt=systemPrompt)
+        contextAndUserMsg = systemPrompt + self.chathistory
 
         response = await self.modelChoices(contextAndUserMsg)
 

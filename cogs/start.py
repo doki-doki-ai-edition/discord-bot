@@ -10,21 +10,23 @@ class Start(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.activeChatInstance = None
+        self.allPrompts = []
         self.allModels = []
+        self.allCharacters = {}
+        for file in os.listdir(f"{self.bot.PATH}/assets/prompts/templates"):
+            self.allPrompts.append(file[:-5])
+        
         for modelFamily in ["openai", "groq", "ollama"]:
             models = Configs().getChatModelInfo[modelFamily]
             for m in models:
                 self.allModels.append(m)
-
-        self.allCharacters = {}
+        
         # Loop through all files in characters folder ending in .py
-        charDir = f"{self.bot.PATH}/characters/"
-
-        for file in os.listdir(charDir):
+        for file in os.listdir(f"{self.bot.PATH}/characters/"):
             if file.endswith(".py"):
                 # Create the module name by stripping the .py extension
                 char = file[:-3].capitalize()
-                file_path = os.path.join(charDir, file)
+                file_path = os.path.join(f"{self.bot.PATH}/characters/", file)
                 
                 # Execute the file and extract the THREAD_ID
                 module_globals = {"__file__": file_path}
@@ -45,6 +47,7 @@ class Start(commands.Cog):
         return True
 
 
+
     async def errorChecks(self, interaction, channel_id, whitelist, user_id):
         if not isinstance(interaction.channel, discord.TextChannel):
             return await self.sendErrorMessage(interaction, "Start command can only be used in a Text Channel!")
@@ -57,9 +60,12 @@ class Start(commands.Cog):
         return False
 
 
+
     async def model_autocomplete(self, interaction:discord.Interaction, current: str,):
         return [app_commands.Choice(name=name, value=name) for name in self.allModels]
 
+    async def prompt_autocomplete(self, interaction:discord.Interaction, current: str,):
+        return [app_commands.Choice(name=name, value=name) for name in self.allPrompts]
 
 
 
@@ -87,7 +93,8 @@ class Start(commands.Cog):
 
     @app_commands.command(name="start")
     @app_commands.autocomplete(chat_model=model_autocomplete)
-    async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool):
+    @app_commands.autocomplete(system_prompt=prompt_autocomplete)
+    async def start(self, interaction:discord.Interaction, chat_model: str, first_msg: bool, system_prompt: str):
         """Begin chatting with the club members"""
 
         if interaction.channel_id in self.bot.active_chat_channels:
@@ -108,7 +115,8 @@ class Start(commands.Cog):
             chat_model=chat_model,
             channel_id=channel_id,
             first_msg=first_msg,
-            characters=self.allCharacters
+            characters=self.allCharacters,
+            chosen_prompt=system_prompt
         )
         return await self.activeChatInstance.setup()
 

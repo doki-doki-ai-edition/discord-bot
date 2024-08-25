@@ -59,13 +59,12 @@ class Info:
         with open(PATH +'/assets/info/cmds.json', 'r') as f:
             desc = json.load(f)
         return desc
-    
-    @property
-    def getExamplePrompts(self):
-        with open(PATH + "/assets/prompts/prompt_template.json", "r") as f:
+
+    def getSystemPrompt(self, chosen_prompt):
+        with open(PATH + f"/assets/prompts/templates/{chosen_prompt}.json", "r") as f:
             example = json.load(f)
         return example
-    
+
     @property
     def getReminder(self):
         with open(PATH + "/assets/info/reminder.json", "r") as f:
