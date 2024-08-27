@@ -62,7 +62,9 @@ class ChatManager:
             # Wait for user to send msg
             try:
                 raw_msg: discord.Message = await self.bot.wait_for("message",
-                    check=lambda m: m.channel.id == channel_obj.id and not m.author.bot and self.chat_still_active, 
+                    check=lambda m: m.channel.id == channel_obj.id and 
+                    not m.author.bot and self.chat_still_active and
+                    m.author.id not in tools(self.bot).blacklist, 
                     timeout = 180
                 )
 

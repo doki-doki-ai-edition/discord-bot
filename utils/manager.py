@@ -162,7 +162,12 @@ class AIManager():
 class Tools:
     def __init__(self, bot):
         self.bot = bot
-        
+
+    @property
+    def blacklist(self):
+        with open(self.bot.PATH + "/data/blacklist.json", "r") as f:
+            return json.load(f)["users"]
+
 
     async def resetChatHistory(self, channel_id):
         """Reset the chat history"""
@@ -186,6 +191,15 @@ class Tools:
             return True
         except:
             return False
+
+
+    async def addUserToBlacklist(self, userId):
+        """Add channel ID to a whitelist"""
+        with open(self.bot.PATH + "/data/blacklist.json", "r") as f:
+            blacklist = json.load(f)
+        blacklist["users"].append(userId)
+        with open(self.bot.PATH + "/data/blacklist.json", "w") as f:
+            json.dump(blacklist, f, indent=2)
 
 
     async def whitelistSetup(self, whitelist, value):

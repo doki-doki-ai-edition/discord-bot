@@ -1,7 +1,7 @@
 {
     "openai": {
         "gpt-4o-mini": {
-            "context_win": "27000",
+            "context_win": "20000",
             "temperature": 0.6
         },
         "gpt-3.5-turbo-1106": {
@@ -17,11 +17,11 @@
     },
     "ollama": {
         "llama3.1": {
-            "context_win": "27000",
+            "context_win": "20000",
             "temperature": 0.6
         },
         "llama3": {
-            "context_win": "27000",
+            "context_win": "20000",
             "temperature": 0.6
         },
         "orca-mini": {

@@ -20,7 +20,7 @@ class Start(commands.Cog):
             models = Configs().getChatModelInfo[modelFamily]
             for m in models:
                 self.allModels.append(m)
-        
+
         # Loop through all files in characters folder ending in .py
         for file in os.listdir(f"{self.bot.PATH}/characters/"):
             if file.endswith(".py"):
@@ -67,6 +67,13 @@ class Start(commands.Cog):
     async def prompt_autocomplete(self, interaction:discord.Interaction, current: str,):
         return [app_commands.Choice(name=name, value=name) for name in self.allPrompts]
 
+
+    @app_commands.command(name="blacklist")
+    @commands.is_owner()
+    async def blacklist(self, interaction:discord.Interaction, user:discord.User):
+        """Add a user to be blacklisted"""
+        await Tools(bot=self.bot).addUserToBlacklist(user.id)
+        return await interaction.response.send_message(content="User added to blacklist")
 
 
     @app_commands.command(name="whitelist")
